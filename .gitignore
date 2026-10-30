@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Local env files — NEVER commit these
+.env
+.env.local
+.env.*.local
+
+# Vite cache
+.vite/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.suo
+.idea/
+.vscode/settings.json
+
+# Supabase local dev
+.supabase/
+
+# Test coverage
+coverage/

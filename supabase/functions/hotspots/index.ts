@@ -1,0 +1,65 @@
+// hotspots Edge Function
+// Runs DBSCAN over open reports and returns cluster data for the dashboard
+
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { dbscan } from '../_shared/dbscan.ts'
+
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin':  '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+}
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS_HEADERS })
+
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+      { auth: { persistSession: false } }
+    )
+
+    // Fetch all open (non-resolved) reports
+    const { data: reports, error } = await supabase
+      .from('reports')
+      .select('id, latitude, longitude, category, user_category, priority_score, location_text, status')
+      .neq('status', 'Resolved')
+
+    if (error) throw new Error(error.message)
+    if (!reports || reports.length === 0) {
+      return new Response(JSON.stringify([]), {
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // Prepare points for DBSCAN
+    const points = reports.map(r => ({
+      id:             r.id,
+      latitude:       r.latitude,
+      longitude:      r.longitude,
+      category:       r.category || r.user_category || 'Other',
+      priority_score: r.priority_score,
+      location_text:  r.location_text,
+      status:         r.status,
+    }))
+
+    // Run DBSCAN: eps=250m, minPts=3
+    const clusters = dbscan(points, 250, 3)
+
+    // Strip the raw points from response (don't expose individual IDs to frontend)
+    const response = clusters.map(({ points: _pts, ...rest }) => rest)
+
+    return new Response(JSON.stringify(response), {
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+    })
+
+  } catch (err) {
+    console.error('hotspots error:', err)
+    return new Response(
+      JSON.stringify({ error: err instanceof Error ? err.message : 'Internal error' }),
+      { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
+    )
+  }
+})
