@@ -1,0 +1,66 @@
+<svg width="900" height="520" viewBox="0 0 900 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Window frame -->
+  <rect width="900" height="520" rx="10" fill="#0B1F3A"/>
+  <circle cx="24" cy="20" r="6" fill="#EF4444"/>
+  <circle cx="44" cy="20" r="6" fill="#F59E0B"/>
+  <circle cx="64" cy="20" r="6" fill="#10B981"/>
+  <text x="100" y="24" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">CivicPulse AI — Citizen Operations Portal</text>
+  
+  <!-- Canvas Background -->
+  <rect y="40" width="900" height="480" fill="#F8FAFC"/>
+  
+  <!-- Navigation Bar -->
+  <rect y="40" width="900" height="60" fill="#0B1F3A"/>
+  <rect x="32" y="52" width="36" height="36" rx="8" fill="#2563EB"/>
+  <text x="42" y="75" fill="#FFFFFF" font-family="sans-serif" font-weight="bold" font-size="16">CP</text>
+  <text x="80" y="68" fill="#FFFFFF" font-family="sans-serif" font-weight="bold" font-size="16">CivicPulse AI</text>
+  <text x="80" y="85" fill="#94A3B8" font-family="sans-serif" font-size="11">From Citizen Complaints to Intelligent Civic Action</text>
+
+  <rect x="660" y="54" width="100" height="32" rx="6" fill="transparent" stroke="#475569" stroke-width="1"/>
+  <text x="682" y="74" fill="#E2E8F0" font-family="sans-serif" font-size="12">Track Issue</text>
+  <rect x="774" y="54" width="94" height="32" rx="6" fill="#2563EB"/>
+  <text x="794" y="74" fill="#FFFFFF" font-family="sans-serif" font-weight="bold" font-size="12">Report Issue</text>
+
+  <!-- Hero Section -->
+  <rect x="32" y="120" width="836" height="150" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <text x="60" y="160" fill="#0B1F3A" font-family="sans-serif" font-weight="bold" font-size="24">Empowering Citizens. Mobilising Cities.</text>
+  <text x="60" y="190" fill="#64748B" font-family="sans-serif" font-size="14">AI-driven complaint triage, duplicate deduplication, and geospatial hotspot response.</text>
+  
+  <!-- Metric Pills -->
+  <rect x="60" y="215" width="130" height="38" rx="8" fill="#F1F5F9"/>
+  <text x="75" y="238" fill="#0B1F3A" font-family="sans-serif" font-weight="bold" font-size="14">142</text>
+  <text x="105" y="238" fill="#64748B" font-family="sans-serif" font-size="12">Complaints</text>
+
+  <rect x="200" y="215" width="130" height="38" rx="8" fill="#F1F5F9"/>
+  <text x="215" y="238" fill="#10B981" font-family="sans-serif" font-weight="bold" font-size="14">89</text>
+  <text x="240" y="238" fill="#64748B" font-family="sans-serif" font-size="12">Resolved</text>
+
+  <rect x="340" y="215" width="150" height="38" rx="8" fill="#F1F5F9"/>
+  <text x="355" y="238" fill="#2563EB" font-family="sans-serif" font-weight="bold" font-size="14">24.5 hrs</text>
+  <text x="415" y="238" fill="#64748B" font-family="sans-serif" font-size="12">Avg Response</text>
+
+  <!-- Feature Cards -->
+  <rect x="32" y="290" width="265" height="195" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <circle cx="62" cy="325" r="16" fill="#EFF6FF"/>
+  <text x="56" y="331" fill="#2563EB" font-family="sans-serif" font-weight="bold" font-size="16">1</text>
+  <text x="60" y="365" fill="#0B1F3A" font-family="sans-serif" font-weight="bold" font-size="15">Snap &amp; Pin Report</text>
+  <text x="60" y="390" fill="#64748B" font-family="sans-serif" font-size="12">Upload photo, select issue, and</text>
+  <text x="60" y="408" fill="#64748B" font-family="sans-serif" font-size="12">pin coordinates via Leaflet map</text>
+  <text x="60" y="426" fill="#64748B" font-family="sans-serif" font-size="12">under 60 seconds.</text>
+
+  <rect x="317" y="290" width="265" height="195" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <circle cx="347" cy="325" r="16" fill="#FEF3C7"/>
+  <text x="341" y="331" fill="#D97706" font-family="sans-serif" font-weight="bold" font-size="16">2</text>
+  <text x="345" y="365" fill="#0B1F3A" font-family="sans-serif" font-weight="bold" font-size="15">Gemini 2.5 Flash Triage</text>
+  <text x="345" y="390" fill="#64748B" font-family="sans-serif" font-size="12">Multimodal validation, automated</text>
+  <text x="345" y="408" fill="#64748B" font-family="sans-serif" font-size="12">priority scoring, safety ranking,</text>
+  <text x="345" y="426" fill="#64748B" font-family="sans-serif" font-size="12">and deduplication detection.</text>
+
+  <rect x="602" y="290" width="265" height="195" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <circle cx="632" cy="325" r="16" fill="#ECFDF5"/>
+  <text x="626" y="331" fill="#059669" font-family="sans-serif" font-weight="bold" font-size="16">3</text>
+  <text x="630" y="365" fill="#0B1F3A" font-family="sans-serif" font-weight="bold" font-size="15">Live Citizen Tracking</text>
+  <text x="630" y="390" fill="#64748B" font-family="sans-serif" font-size="12">Real-time status updates,</text>
+  <text x="630" y="408" fill="#64748B" font-family="sans-serif" font-size="12">officer action notes, and</text>
+  <text x="630" y="426" fill="#64748B" font-family="sans-serif" font-size="12">resolution confirmation.</text>
+</svg>

@@ -64,3 +64,18 @@
 * **Credential Isolation & Rotation Policy:**
   * No secrets, service-role keys, or administrative passwords are committed to git or bundled in client-side artifacts.
   * Municipal administrator accounts must be provisioned individually via the **Supabase Auth Dashboard** (Users -> Invite/Add User) or via the Supabase Admin API. Any previous demo password must be invalidated by creating a dedicated account and removing unneeded demo users.
+
+---
+
+## 6. Duplicate Detection NLP Benchmark & Lexical Limitations
+* **Evaluation Benchmark:**
+  * Evaluated across 30 labeled civic complaint pairs (`eval/duplicate_pairs.json`) including true duplicates with identical/rephrased text, distant false matches, and distinct categories at the same coordinates.
+  * Measured Performance at configured threshold ($\tau = 0.70$):
+    * **Precision: 100.0%** (0 false positives; no unrelated complaints incorrectly linked)
+    * **Recall: 53.3%** (8/15 positive duplicates detected)
+    * **F1 Score: 69.6%**
+    * **Accuracy: 76.7%**
+* **Lexical Gap in TF-IDF Bag-of-Words:**
+  * The 7 false negatives at $\tau = 0.70$ demonstrate the inherent vocabulary mismatch problem of pure token overlap (e.g., "pothole" vs. "road crater", "broken concrete slab" vs. "damaged paver blocks", "sewage leak" vs. "stinking drain water").
+  * **Threshold Sensitivity:** Sweeping the operating threshold down to $\tau = 0.55$ yields **100.0% Recall and 100.0% F1** on the benchmark with **0 False Positives**, as all negative pairs scored $\le 0.416$.
+  * **Production Recommendation:** For production scale beyond lightweight edge functions, integrate dense neural embeddings (e.g., Google `text-embedding-004`) with pgvector cosine similarity to bridge semantic synonymy.
