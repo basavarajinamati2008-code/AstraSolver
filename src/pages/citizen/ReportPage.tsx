@@ -335,27 +335,29 @@ export default function ReportPage() {
               {/* Manual lat/lng fallback */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label htmlFor="lat">Latitude</Label>
+                  <Label htmlFor="lat" className="text-xs font-medium text-slate-700">Latitude</Label>
                   <Input
                     id="lat"
+                    aria-label="Latitude coordinates"
                     type="number"
                     step="any"
                     placeholder="e.g. 12.9716"
                     value={latitude ?? ''}
                     onChange={e => setLatitude(parseFloat(e.target.value) || null)}
-                    className="mt-1"
+                    className="mt-1 focus:ring-2 focus:ring-civic-accent focus:outline-none"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="lng">Longitude</Label>
+                  <Label htmlFor="lng" className="text-xs font-medium text-slate-700">Longitude</Label>
                   <Input
                     id="lng"
+                    aria-label="Longitude coordinates"
                     type="number"
                     step="any"
                     placeholder="e.g. 77.5946"
                     value={longitude ?? ''}
                     onChange={e => setLongitude(parseFloat(e.target.value) || null)}
-                    className="mt-1"
+                    className="mt-1 focus:ring-2 focus:ring-civic-accent focus:outline-none"
                   />
                 </div>
               </div>

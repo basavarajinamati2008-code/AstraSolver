@@ -112,6 +112,9 @@ export default function AdminLayout() {
           </Button>
           <Shield className="h-5 w-5 text-civic-accent" />
           <span className="font-semibold text-navy text-sm">Municipal Dashboard</span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200">
+            Prototype — synthetic demo data
+          </span>
           <div className="ml-auto text-xs text-muted-foreground hidden sm:block">
             PromptWars x ASTRA Demo
           </div>
