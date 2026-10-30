@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
-  ArrowLeft, MapPin, AlertTriangle, Clock, Building2, CheckCircle,
-  Edit3, Loader2, Image as ImageIcon, Bot, Copy, ExternalLink
+  ArrowLeft, MapPin, Clock, CheckCircle,
+  Edit3, Loader2, Image as ImageIcon, Bot, ExternalLink
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
