@@ -43,6 +43,10 @@ export interface Report {
   priority_breakdown: PriorityBreakdown | null
   priority_explanation: string | null
   recommended_action: string | null
+  // Officer priority override (keeps original AI/computed score untouched)
+  priority_override?: Priority | null
+  override_reason?: string | null
+  override_by?: string | null
   latitude: number
   longitude: number
   location_text: string | null
@@ -65,7 +69,10 @@ export interface ReportUpdate {
   report_id: string
   old_status: string | null
   new_status: string | null
+  old_priority?: string | null
+  new_priority?: string | null
   action_note: string | null
+  is_sensitive?: boolean
   updated_by: string | null
   created_at: string
 }

@@ -10,7 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "node tests/runner.mjs",
     "test:vitest": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "eval": "node eval/run-eval.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.2",

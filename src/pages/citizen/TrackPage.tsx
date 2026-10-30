@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CitizenHeader } from '@/components/citizen/CitizenHeader'
-import { AiLabel } from '@/components/ui/ai-label'
+import { AiLabel, AiFailedNotice } from '@/components/ui/ai-label'
 import { supabase } from '@/lib/supabase'
 import type { TrackResult, ReportStatus } from '@/types'
 import { STATUSES } from '@/types'
@@ -46,6 +46,33 @@ export default function TrackPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Realtime subscription: update citizen view immediately when an officer updates status or notes
+  useEffect(() => {
+    if (!result?.id) return
+    const channel = supabase
+      .channel(`public:report:${result.id}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'report_updates', filter: `report_id=eq.${result.id}` },
+        () => {
+          handleSearch()
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'reports', filter: `id=eq.${result.id}` },
+        () => {
+          handleSearch()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result?.id])
 
   const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault()
@@ -142,6 +169,9 @@ export default function TrackPage() {
                     </div>
                   )}
                 </div>
+                {result.ai_status === 'failed' && (
+                  <AiFailedNotice reason="AI classification unavailable. A municipal officer will verify priority and routing manually." />
+                )}
                 {result.ai_summary && result.ai_status === 'success' && (
                   <div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">AI Summary <AiLabel /></p>

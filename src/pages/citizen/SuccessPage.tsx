@@ -5,7 +5,7 @@ import { CheckCircle, Copy, FileSearch, MapPin, AlertCircle, Bot } from 'lucide-
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { AiLabel } from '@/components/ui/ai-label'
+import { AiLabel, AiFailedNotice } from '@/components/ui/ai-label'
 import { CitizenHeader } from '@/components/citizen/CitizenHeader'
 import { useToast } from '@/components/ui/toaster'
 import type { SubmitReportResponse } from '@/types'
@@ -126,12 +126,7 @@ export default function SuccessPage() {
                 )}
               </div>
             ) : (
-              <div className="flex items-start gap-2 p-3 bg-slate-50 border border-slate-200 rounded-md">
-                <AlertCircle className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-muted-foreground">
-                  Submitted. AI analysis unavailable; an officer will review manually.
-                </p>
-              </div>
+              <AiFailedNotice reason="AI analysis unavailable; an officer will review and assign priority manually." />
             )}
           </CardContent>
         </Card>

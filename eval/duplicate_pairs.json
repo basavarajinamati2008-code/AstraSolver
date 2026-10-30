@@ -1,0 +1,572 @@
+[
+  {
+    "id": 1,
+    "same_issue": true,
+    "variation_type": "Direct overlap, 15m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-001A",
+      "description": "Huge pothole near Sony World signal causing severe traffic bottleneck",
+      "category": "Road Damage",
+      "latitude": 12.9352,
+      "longitude": 77.6245
+    },
+    "report_b": {
+      "id": "CIV-EVAL-001B",
+      "description": "Dangerous pothole near Sony World signal traffic jam and vehicle damage",
+      "category": "Road Damage",
+      "latitude": 12.9353,
+      "longitude": 77.6246
+    }
+  },
+  {
+    "id": 2,
+    "same_issue": true,
+    "variation_type": "Common vocabulary, 20m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-002A",
+      "description": "Overflowing municipal garbage bin outside green glen park gate",
+      "category": "Garbage",
+      "latitude": 12.9230,
+      "longitude": 77.6710
+    },
+    "report_b": {
+      "id": "CIV-EVAL-002B",
+      "description": "Garbage bin overflowing outside green glen park gate terrible smell",
+      "category": "Garbage",
+      "latitude": 12.9231,
+      "longitude": 77.6711
+    }
+  },
+  {
+    "id": 3,
+    "same_issue": true,
+    "variation_type": "Direct overlap, 15m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-003A",
+      "description": "Streetlight blinking and dead near 12th main corner pitch dark",
+      "category": "Streetlight",
+      "latitude": 12.9698,
+      "longitude": 77.6401
+    },
+    "report_b": {
+      "id": "CIV-EVAL-003B",
+      "description": "Streetlight dead near 12th main corner completely dark and unsafe",
+      "category": "Streetlight",
+      "latitude": 12.9699,
+      "longitude": 77.6402
+    }
+  },
+  {
+    "id": 4,
+    "same_issue": true,
+    "variation_type": "Direct overlap, 20m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-004A",
+      "description": "Knee deep waterlogging under railway underpass vehicles getting stuck",
+      "category": "Waterlogging",
+      "latitude": 12.9812,
+      "longitude": 77.6105
+    },
+    "report_b": {
+      "id": "CIV-EVAL-004B",
+      "description": "Severe waterlogging under railway underpass cars flooded and stuck",
+      "category": "Waterlogging",
+      "latitude": 12.9813,
+      "longitude": 77.6106
+    }
+  },
+  {
+    "id": 5,
+    "same_issue": true,
+    "variation_type": "Direct overlap, 15m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-005A",
+      "description": "Open manhole dangerous for pedestrians near central bus stop",
+      "category": "Drainage",
+      "latitude": 12.9750,
+      "longitude": 77.5890
+    },
+    "report_b": {
+      "id": "CIV-EVAL-005B",
+      "description": "Open manhole near central bus stop severe hazard for people walking",
+      "category": "Drainage",
+      "latitude": 12.9751,
+      "longitude": 77.5891
+    }
+  },
+  {
+    "id": 6,
+    "same_issue": true,
+    "variation_type": "Direct overlap, 15m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-006A",
+      "description": "Drinking water pipeline burst flooding 4th cross road",
+      "category": "Water Supply",
+      "latitude": 12.9300,
+      "longitude": 77.6180
+    },
+    "report_b": {
+      "id": "CIV-EVAL-006B",
+      "description": "Water pipeline burst on 4th cross clean drinking water wasting",
+      "category": "Water Supply",
+      "latitude": 12.9301,
+      "longitude": 77.6181
+    }
+  },
+  {
+    "id": 7,
+    "same_issue": true,
+    "variation_type": "Direct overlap, 20m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-007A",
+      "description": "Massive pothole damaged two car tires on 80ft road near junction",
+      "category": "Road Damage",
+      "latitude": 12.9380,
+      "longitude": 77.6250
+    },
+    "report_b": {
+      "id": "CIV-EVAL-007B",
+      "description": "Massive pothole on 80ft road near junction damaging bike and car tires",
+      "category": "Road Damage",
+      "latitude": 12.9381,
+      "longitude": 77.6251
+    }
+  },
+  {
+    "id": 8,
+    "same_issue": true,
+    "variation_type": "Direct overlap, 20m apart (High confidence)",
+    "report_a": {
+      "id": "CIV-EVAL-008A",
+      "description": "No municipal water supply in block C for 48 hours taps dry",
+      "category": "Water Supply",
+      "latitude": 12.9100,
+      "longitude": 77.6400
+    },
+    "report_b": {
+      "id": "CIV-EVAL-008B",
+      "description": "Municipal water supply completely stopped block C taps dry 2 days",
+      "category": "Water Supply",
+      "latitude": 12.9101,
+      "longitude": 77.6401
+    }
+  },
+  {
+    "id": 9,
+    "same_issue": true,
+    "variation_type": "Semantic rephrasing, 15m apart (Lexical boundary case)",
+    "report_a": {
+      "id": "CIV-EVAL-009A",
+      "description": "Huge pothole near Sony World signal causing severe traffic bottleneck",
+      "category": "Road Damage",
+      "latitude": 12.9352,
+      "longitude": 77.6245
+    },
+    "report_b": {
+      "id": "CIV-EVAL-009B",
+      "description": "Large road crater bottlenecking vehicles and damaging tires near Sony",
+      "category": "Road Damage",
+      "latitude": 12.9353,
+      "longitude": 77.6246
+    }
+  },
+  {
+    "id": 10,
+    "same_issue": true,
+    "variation_type": "Synonym variation, 25m apart (Lexical boundary case)",
+    "report_a": {
+      "id": "CIV-EVAL-010A",
+      "description": "Broken concrete slab on pedestrian sidewalk causing falls",
+      "category": "Road Damage",
+      "latitude": 12.9701,
+      "longitude": 77.6010
+    },
+    "report_b": {
+      "id": "CIV-EVAL-010B",
+      "description": "Damaged footpath paver slabs broken elderly tripping and falling",
+      "category": "Road Damage",
+      "latitude": 12.9702,
+      "longitude": 77.6012
+    }
+  },
+  {
+    "id": 11,
+    "same_issue": true,
+    "variation_type": "Synonym variation, 20m apart (Lexical boundary case)",
+    "report_a": {
+      "id": "CIV-EVAL-011A",
+      "description": "Garbage dump catching fire behind vegetable market thick smoke",
+      "category": "Garbage",
+      "latitude": 12.9150,
+      "longitude": 77.5900
+    },
+    "report_b": {
+      "id": "CIV-EVAL-011B",
+      "description": "Toxic smoke and burning waste pile market back gate suffocating",
+      "category": "Garbage",
+      "latitude": 12.9151,
+      "longitude": 77.5901
+    }
+  },
+  {
+    "id": 12,
+    "same_issue": true,
+    "variation_type": "Synonym variation, 25m apart (Lexical boundary case)",
+    "report_a": {
+      "id": "CIV-EVAL-012A",
+      "description": "High voltage wire sparking hanging low over road risk of electrocution",
+      "category": "Public Safety",
+      "latitude": 12.9450,
+      "longitude": 77.6320
+    },
+    "report_b": {
+      "id": "CIV-EVAL-012B",
+      "description": "Live electric wire snapped hanging dangerously low touching buses",
+      "category": "Public Safety",
+      "latitude": 12.9451,
+      "longitude": 77.6322
+    }
+  },
+  {
+    "id": 13,
+    "same_issue": true,
+    "variation_type": "Synonym variation, 25m apart (Lexical boundary case)",
+    "report_a": {
+      "id": "CIV-EVAL-013A",
+      "description": "Sewage overflowing from drainage chamber onto street foul smell",
+      "category": "Drainage",
+      "latitude": 12.9550,
+      "longitude": 77.5700
+    },
+    "report_b": {
+      "id": "CIV-EVAL-013B",
+      "description": "Stinking drain sewage backing up from chamber into road contaminating area",
+      "category": "Drainage",
+      "latitude": 12.9552,
+      "longitude": 77.5701
+    }
+  },
+  {
+    "id": 14,
+    "same_issue": true,
+    "variation_type": "Synonym variation, 35m apart (Lexical boundary case)",
+    "report_a": {
+      "id": "CIV-EVAL-014A",
+      "description": "Streetlights completely off for 3 blocks on 6th cross dark road",
+      "category": "Streetlight",
+      "latitude": 12.9620,
+      "longitude": 77.6380
+    },
+    "report_b": {
+      "id": "CIV-EVAL-014B",
+      "description": "Pitch black stretch streetlamps not working 6th cross chain snatching fear",
+      "category": "Streetlight",
+      "latitude": 12.9621,
+      "longitude": 77.6383
+    }
+  },
+  {
+    "id": 15,
+    "same_issue": true,
+    "variation_type": "Synonym variation, 35m apart (Lexical boundary case)",
+    "report_a": {
+      "id": "CIV-EVAL-015A",
+      "description": "Construction debris dumped on footpath blocking walking pedestrians",
+      "category": "Garbage",
+      "latitude": 12.9780,
+      "longitude": 77.6450
+    },
+    "report_b": {
+      "id": "CIV-EVAL-015B",
+      "description": "Illegal concrete debris and rubble pile dumped on walking pavement",
+      "category": "Garbage",
+      "latitude": 12.9781,
+      "longitude": 77.6453
+    }
+  },
+  {
+    "id": 16,
+    "same_issue": false,
+    "variation_type": "Different categories and issues at exact same location (15m)",
+    "report_a": {
+      "id": "CIV-EVAL-016A",
+      "description": "Dangerous pothole crater in front of supermarket",
+      "category": "Road Damage",
+      "latitude": 12.9350,
+      "longitude": 77.6250
+    },
+    "report_b": {
+      "id": "CIV-EVAL-016B",
+      "description": "Streetlight pole broken and light dead outside supermarket",
+      "category": "Streetlight",
+      "latitude": 12.9351,
+      "longitude": 77.6251
+    }
+  },
+  {
+    "id": 17,
+    "same_issue": false,
+    "variation_type": "Different issues (Garbage vs Water Supply) at same corner (15m)",
+    "report_a": {
+      "id": "CIV-EVAL-017A",
+      "description": "Garbage accumulation and plastic bags dumped outside gate",
+      "category": "Garbage",
+      "latitude": 12.9230,
+      "longitude": 77.6710
+    },
+    "report_b": {
+      "id": "CIV-EVAL-017B",
+      "description": "Cauvery water supply pipe has zero pressure no water received",
+      "category": "Water Supply",
+      "latitude": 12.9231,
+      "longitude": 77.6711
+    }
+  },
+  {
+    "id": 18,
+    "same_issue": false,
+    "variation_type": "Identical category and similar wording, but 12 km apart",
+    "report_a": {
+      "id": "CIV-EVAL-018A",
+      "description": "Deep pothole causing accidents near metro station",
+      "category": "Road Damage",
+      "latitude": 12.9784,
+      "longitude": 77.6408
+    },
+    "report_b": {
+      "id": "CIV-EVAL-018B",
+      "description": "Deep pothole causing accidents near metro station",
+      "category": "Road Damage",
+      "latitude": 12.9698,
+      "longitude": 77.7499
+    }
+  },
+  {
+    "id": 19,
+    "same_issue": false,
+    "variation_type": "Identical category and similar wording, but 8.5 km apart",
+    "report_a": {
+      "id": "CIV-EVAL-019A",
+      "description": "Streetlight dark on main road unsafe at night",
+      "category": "Streetlight",
+      "latitude": 12.9299,
+      "longitude": 77.5824
+    },
+    "report_b": {
+      "id": "CIV-EVAL-019B",
+      "description": "Streetlight dark on main road unsafe at night",
+      "category": "Streetlight",
+      "latitude": 13.0031,
+      "longitude": 77.5703
+    }
+  },
+  {
+    "id": 20,
+    "same_issue": false,
+    "variation_type": "Identical category and wording, but 14 km apart",
+    "report_a": {
+      "id": "CIV-EVAL-020A",
+      "description": "Severe waterlogging under bridge after heavy rainfall",
+      "category": "Waterlogging",
+      "latitude": 13.0358,
+      "longitude": 77.5970
+    },
+    "report_b": {
+      "id": "CIV-EVAL-020B",
+      "description": "Severe waterlogging under bridge after heavy rainfall",
+      "category": "Waterlogging",
+      "latitude": 12.9172,
+      "longitude": 77.6228
+    }
+  },
+  {
+    "id": 21,
+    "same_issue": false,
+    "variation_type": "Different categories (Garbage vs Drainage) at same spot (20m)",
+    "report_a": {
+      "id": "CIV-EVAL-021A",
+      "description": "Huge garbage pile rotting near metro pillar 45 attracting stray animals",
+      "category": "Garbage",
+      "latitude": 12.9750,
+      "longitude": 77.6000
+    },
+    "report_b": {
+      "id": "CIV-EVAL-021B",
+      "description": "Open drainage chamber broken cover near metro pillar 45",
+      "category": "Drainage",
+      "latitude": 12.9750,
+      "longitude": 77.6002
+    }
+  },
+  {
+    "id": 22,
+    "same_issue": false,
+    "variation_type": "Different categories (Public Safety vs Streetlight) near playground (25m)",
+    "report_a": {
+      "id": "CIV-EVAL-022A",
+      "description": "Aggressive pack of stray dogs biting pedestrians near playground gate",
+      "category": "Public Safety",
+      "latitude": 12.9500,
+      "longitude": 77.6100
+    },
+    "report_b": {
+      "id": "CIV-EVAL-022B",
+      "description": "Streetlight fixture broken and dark near children playground gate",
+      "category": "Streetlight",
+      "latitude": 12.9501,
+      "longitude": 77.6102
+    }
+  },
+  {
+    "id": 23,
+    "same_issue": false,
+    "variation_type": "Identical complaint text, different sides of city (14 km)",
+    "report_a": {
+      "id": "CIV-EVAL-023A",
+      "description": "Drainage chamber cover broken on main road",
+      "category": "Drainage",
+      "latitude": 12.9300,
+      "longitude": 77.5600
+    },
+    "report_b": {
+      "id": "CIV-EVAL-023B",
+      "description": "Drainage chamber cover broken on main road",
+      "category": "Drainage",
+      "latitude": 12.8450,
+      "longitude": 77.6600
+    }
+  },
+  {
+    "id": 24,
+    "same_issue": false,
+    "variation_type": "Different issues (Water Supply leak vs Road Trench) at same spot (15m)",
+    "report_a": {
+      "id": "CIV-EVAL-024A",
+      "description": "Drinking water pipeline leak spurting water continuously on 2nd cross",
+      "category": "Water Supply",
+      "latitude": 12.9400,
+      "longitude": 77.6000
+    },
+    "report_b": {
+      "id": "CIV-EVAL-024B",
+      "description": "Unpaved road trench dug for underground cables left open without barricades",
+      "category": "Road Damage",
+      "latitude": 12.9401,
+      "longitude": 77.6001
+    }
+  },
+  {
+    "id": 25,
+    "same_issue": false,
+    "variation_type": "Identical road crater wording, 15 km apart",
+    "report_a": {
+      "id": "CIV-EVAL-025A",
+      "description": "Massive crater on flyover lane risking life of two wheelers",
+      "category": "Road Damage",
+      "latitude": 12.9260,
+      "longitude": 77.6762
+    },
+    "report_b": {
+      "id": "CIV-EVAL-025B",
+      "description": "Massive crater on flyover lane risking life of two wheelers",
+      "category": "Road Damage",
+      "latitude": 12.9530,
+      "longitude": 77.5450
+    }
+  },
+  {
+    "id": 26,
+    "same_issue": false,
+    "variation_type": "Tree branch vs Streetlight rust, 30m apart",
+    "report_a": {
+      "id": "CIV-EVAL-026A",
+      "description": "Large tree branch snapped hanging precariously over road traffic",
+      "category": "Public Safety",
+      "latitude": 12.9600,
+      "longitude": 77.6500
+    },
+    "report_b": {
+      "id": "CIV-EVAL-026B",
+      "description": "Streetlight post rusted with exposed base wires near road divider",
+      "category": "Streetlight",
+      "latitude": 12.9602,
+      "longitude": 77.6502
+    }
+  },
+  {
+    "id": 27,
+    "same_issue": false,
+    "variation_type": "Public Safety vs Waterlogging, 15m apart",
+    "report_a": {
+      "id": "CIV-EVAL-027A",
+      "description": "Illegal metal billboard structure collapsed onto pedestrian pathway",
+      "category": "Public Safety",
+      "latitude": 12.9650,
+      "longitude": 77.6100
+    },
+    "report_b": {
+      "id": "CIV-EVAL-027B",
+      "description": "Severe waterlogging on service road rainwater not draining away",
+      "category": "Waterlogging",
+      "latitude": 12.9651,
+      "longitude": 77.6101
+    }
+  },
+  {
+    "id": 28,
+    "same_issue": false,
+    "variation_type": "Garbage vs Water Supply, 25m apart",
+    "report_a": {
+      "id": "CIV-EVAL-028A",
+      "description": "Decomposing garbage dump in front of apartment gate unhygienic",
+      "category": "Garbage",
+      "latitude": 12.9350,
+      "longitude": 77.6200
+    },
+    "report_b": {
+      "id": "CIV-EVAL-028B",
+      "description": "Tap water supply discolored yellow and muddy smell coming from pipe",
+      "category": "Water Supply",
+      "latitude": 12.9351,
+      "longitude": 77.6202
+    }
+  },
+  {
+    "id": 29,
+    "same_issue": false,
+    "variation_type": "Streetlamp failure, 17 km apart",
+    "report_a": {
+      "id": "CIV-EVAL-029A",
+      "description": "Streetlight dark and bulb shattered on 1st cross",
+      "category": "Streetlight",
+      "latitude": 12.9800,
+      "longitude": 77.6200
+    },
+    "report_b": {
+      "id": "CIV-EVAL-029B",
+      "description": "Streetlight dark and bulb shattered on 1st cross",
+      "category": "Streetlight",
+      "latitude": 12.9080,
+      "longitude": 77.4850
+    }
+  },
+  {
+    "id": 30,
+    "same_issue": false,
+    "variation_type": "Drainage vs Road sign, 25m apart",
+    "report_a": {
+      "id": "CIV-EVAL-030A",
+      "description": "Blocked stormwater drain overflowing with plastic and filth on 3rd cross",
+      "category": "Drainage",
+      "latitude": 12.9500,
+      "longitude": 77.5800
+    },
+    "report_b": {
+      "id": "CIV-EVAL-030B",
+      "description": "Damaged and missing speed limit road signboard on 3rd cross corner",
+      "category": "Road Damage",
+      "latitude": 12.9501,
+      "longitude": 77.5802
+    }
+  }
+]

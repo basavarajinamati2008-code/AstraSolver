@@ -29,6 +29,11 @@ CREATE TABLE IF NOT EXISTS reports (
   priority_explanation text,
   recommended_action   text,
 
+  -- Officer priority override (preserves original computed score)
+  priority_override    text CHECK (priority_override IN ('Low', 'Medium', 'High', 'Critical')),
+  override_reason      text,
+  override_by          text,
+
   -- Location
   latitude             double precision NOT NULL,
   longitude            double precision NOT NULL,
@@ -64,7 +69,10 @@ CREATE TABLE IF NOT EXISTS report_updates (
   report_id    uuid NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
   old_status   text,
   new_status   text,
+  old_priority text,
+  new_priority text,
   action_note  text,
+  is_sensitive boolean NOT NULL DEFAULT false,
   updated_by   text,
   created_at   timestamptz NOT NULL DEFAULT now()
 );
@@ -152,6 +160,7 @@ BEGIN
     'category',            r.category,
     'ai_summary',          r.ai_summary,
     'status',              r.status,
+    'priority_level',      COALESCE(r.priority_override, r.priority_level),
     'assigned_department', r.assigned_department,
     'location_text',       r.location_text,
     'affected_count',      r.affected_count,
@@ -165,7 +174,9 @@ BEGIN
           'report_id',   u.report_id,
           'old_status',  u.old_status,
           'new_status',  u.new_status,
-          'action_note', u.action_note,
+          'old_priority', u.old_priority,
+          'new_priority', u.new_priority,
+          'action_note', CASE WHEN u.is_sensitive THEN 'Administrative review note (internal).' ELSE u.action_note END,
           'updated_by',  u.updated_by,
           'created_at',  u.created_at
         ) ORDER BY u.created_at ASC

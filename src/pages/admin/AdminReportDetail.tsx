@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from '@/components/ui/skeleton'
-import { AiLabel } from '@/components/ui/ai-label'
+import { AiLabel, AiFailedNotice } from '@/components/ui/ai-label'
 import { supabase } from '@/lib/supabase'
 import type { Report, ReportUpdate } from '@/types'
 import { STATUSES, DEPARTMENTS } from '@/types'
@@ -53,6 +53,9 @@ export default function AdminReportDetail() {
   // Action form state
   const [newStatus, setNewStatus]       = useState('')
   const [newDept, setNewDept]           = useState('')
+  const [newPriority, setNewPriority]   = useState<string>('original')
+  const [overrideReason, setOverrideReason] = useState('')
+  const [isSensitive, setIsSensitive]   = useState(false)
   const [actionNote, setActionNote]     = useState('')
   const [saving, setSaving]             = useState(false)
 
@@ -66,27 +69,54 @@ export default function AdminReportDetail() {
       supabase.from('report_updates').select('*').eq('report_id', id).order('created_at', { ascending: true }),
     ])
 
-    if (rep) { setReport(rep); setNewStatus(rep.status); setNewDept(rep.assigned_department || '') }
+    if (rep) {
+      setReport(rep)
+      setNewStatus(rep.status)
+      setNewDept(rep.assigned_department || '')
+      setNewPriority(rep.priority_override || 'original')
+      setOverrideReason(rep.override_reason || '')
+    }
     setUpdates(hist || [])
     setLoading(false)
   }
 
   useEffect(() => { loadReport() }, [id])
 
-  // Save status / department change + note
+  // Save status / department / priority override + note
   const handleSave = async () => {
     if (!report) return
+
+    // Priority override requires a mandatory justification reason
+    const isOverriding = newPriority !== 'original' && newPriority !== report.priority_level
+    if (isOverriding && !overrideReason.trim()) {
+      toast({
+        title: 'Override Reason Required',
+        description: 'You must provide a justification reason to override the AI priority level.',
+        variant: 'destructive',
+      })
+      return
+    }
+
     setSaving(true)
 
-    const changed = newStatus !== report.status || newDept !== (report.assigned_department || '')
+    const statusChanged = newStatus !== report.status
+    const deptChanged = newDept !== (report.assigned_department || '')
+    const priorityChanged = newPriority !== (report.priority_override || 'original')
 
-    // Insert update row
+    const activePriority = newPriority === 'original' ? null : newPriority
+
+    // Insert audit update row
     const { error: updErr } = await supabase.from('report_updates').insert({
-      report_id:   report.id,
-      old_status:  report.status,
-      new_status:  newStatus || null,
-      action_note: actionNote || null,
-      updated_by:  'admin',
+      report_id:    report.id,
+      old_status:   report.status,
+      new_status:   newStatus || null,
+      old_priority: report.priority_override || report.priority_level,
+      new_priority: activePriority,
+      action_note:  isOverriding
+        ? `[Officer Priority Override to ${newPriority}]: ${overrideReason}${actionNote ? ` | Note: ${actionNote}` : ''}`
+        : (actionNote || null),
+      is_sensitive: isSensitive,
+      updated_by:   'officer',
     })
 
     if (updErr) {
@@ -96,15 +126,18 @@ export default function AdminReportDetail() {
     }
 
     // Update the report row
-    if (changed || actionNote) {
+    if (statusChanged || deptChanged || priorityChanged || actionNote) {
       await supabase.from('reports').update({
         status:              newStatus,
         assigned_department: newDept || null,
+        priority_override:   activePriority,
+        override_reason:     activePriority ? overrideReason : null,
+        override_by:         activePriority ? 'officer' : null,
         updated_at:          new Date().toISOString(),
       }).eq('id', report.id)
     }
 
-    toast({ title: 'Saved', description: 'Report updated successfully.' })
+    toast({ title: 'Saved', description: 'Report updated and audit trail recorded.' })
     setActionNote('')
     await loadReport()
     setSaving(false)
@@ -139,12 +172,18 @@ export default function AdminReportDetail() {
       {/* ── Header ────────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className="font-mono text-lg font-bold text-civic-accent">{report.complaint_code}</span>
-            <span className={`text-xs px-2 py-1 rounded-full font-semibold ${priorityClass(report.priority_level)}`}>
-              {report.priority_level || 'Unscored'}
-              {report.priority_score != null && ` · ${report.priority_score}/100`}
-            </span>
+            {report.priority_override ? (
+              <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${priorityClass(report.priority_override)}`}>
+                Override: {report.priority_override} (Original AI: {report.priority_level})
+              </span>
+            ) : (
+              <span className={`text-xs px-2 py-1 rounded-full font-semibold ${priorityClass(report.priority_level)}`}>
+                {report.priority_level || 'Unscored'}
+                {report.priority_score != null && ` · ${report.priority_score}/100`}
+              </span>
+            )}
           </div>
           <p className="text-sm text-muted-foreground">Submitted {formatDate(report.created_at)}</p>
         </div>
@@ -181,20 +220,19 @@ export default function AdminReportDetail() {
           {/* AI Analysis */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Bot className="h-4 w-4 text-civic-accent" />
-                AI Analysis
-                {report.ai_status === 'success' && <AiLabel />}
-              </CardTitle>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Bot className="h-4 w-4 text-civic-accent" />
+                  AI Intelligence Assessment
+                </CardTitle>
+                {report.ai_status === 'success' && <AiLabel timestamp={report.created_at} />}
+              </div>
             </CardHeader>
             <CardContent>
               {report.ai_status === 'failed' ? (
-                <div className="p-3 bg-red-50 border border-red-100 rounded text-sm text-red-700">
-                  AI analysis failed. Manual review required.
-                  {report.ai_error && <p className="text-xs mt-1 opacity-70">{report.ai_error}</p>}
-                </div>
+                <AiFailedNotice reason={report.ai_error || undefined} />
               ) : report.ai_status === 'pending' ? (
-                <div className="p-3 bg-yellow-50 border border-yellow-100 rounded text-sm text-yellow-700">
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
                   AI analysis in progress…
                 </div>
               ) : (
@@ -375,6 +413,44 @@ export default function AdminReportDetail() {
                     {DEPARTMENTS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* Priority Override */}
+              <div className="border-t pt-3">
+                <p className="text-xs font-semibold text-navy mb-1.5">Officer Priority Override</p>
+                <Select value={newPriority} onValueChange={setNewPriority}>
+                  <SelectTrigger><SelectValue placeholder="Keep original priority" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="original">Keep Original AI / Computed ({report.priority_level || 'None'})</SelectItem>
+                    <SelectItem value="Critical">Override to: Critical</SelectItem>
+                    <SelectItem value="High">Override to: High</SelectItem>
+                    <SelectItem value="Medium">Override to: Medium</SelectItem>
+                    <SelectItem value="Low">Override to: Low</SelectItem>
+                  </SelectContent>
+                </Select>
+                {newPriority !== 'original' && newPriority !== report.priority_level && (
+                  <div className="mt-2.5 space-y-1.5 bg-amber-50/70 p-2.5 rounded border border-amber-200">
+                    <p className="text-[11px] text-amber-900 font-semibold">
+                      Justification Reason * (mandatory for audit log)
+                    </p>
+                    <Textarea
+                      placeholder="e.g. Field inspection confirmed active gas line exposure adjacent to crater..."
+                      value={overrideReason}
+                      onChange={e => setOverrideReason(e.target.value)}
+                      className="min-h-[60px] text-xs bg-white"
+                      required
+                    />
+                    <label className="flex items-center gap-1.5 text-[11px] text-slate-600 mt-1 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isSensitive}
+                        onChange={e => setIsSensitive(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span>Mark reason as internal sensitive note (hidden from citizen tracker)</span>
+                    </label>
+                  </div>
+                )}
               </div>
               <div>
                 <p className="text-xs text-muted-foreground mb-1.5">Action Note (optional)</p>
