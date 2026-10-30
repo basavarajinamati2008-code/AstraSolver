@@ -20,15 +20,52 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
+// ── Categories whitelist ──────────────────────────────────────────────────────
+const ALLOWED_CATEGORIES = [
+  'Road Damage',
+  'Waterlogging',
+  'Garbage',
+  'Streetlight',
+  'Water Supply',
+  'Drainage',
+  'Public Safety',
+  'Other',
+] as const
+
+// ── In-Memory Sliding Window Rate Limiter ────────────────────────────────────
+// Limits anonymous abuse: Max 10 submissions per 5-minute window per IP
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000
+const MAX_SUBMISSIONS_PER_WINDOW = 10
+const ipSubmissions = new Map<string, number[]>()
+
+function checkRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
+  const now = Date.now()
+  const timestamps = (ipSubmissions.get(ip) || []).filter(t => now - t < RATE_LIMIT_WINDOW_MS)
+
+  if (timestamps.length >= MAX_SUBMISSIONS_PER_WINDOW) {
+    const oldest = timestamps[0]
+    const retryAfter = Math.ceil((oldest + RATE_LIMIT_WINDOW_MS - now) / 1000)
+    return { allowed: false, retryAfterSeconds: Math.max(1, retryAfter) }
+  }
+
+  timestamps.push(now)
+  ipSubmissions.set(ip, timestamps)
+  return { allowed: true }
+}
+
 // ── Input validation schema ───────────────────────────────────────────────────
 const InputSchema = z.object({
-  description:    z.string().min(5).max(2000),
-  user_category:  z.string().min(1).max(50),
+  description:    z.string().min(10, 'Description must be at least 10 characters').max(2000, 'Description exceeds 2000 characters limit'),
+  user_category:  z.enum(ALLOWED_CATEGORIES, { errorMap: () => ({ message: 'Invalid category selected' }) }),
   latitude:       z.number().min(-90).max(90),
   longitude:      z.number().min(-180).max(180),
-  location_text:  z.string().max(200).optional().nullable(),
-  affected_count: z.number().int().min(1).max(9999).default(1),
-  image_url:      z.string().url().optional().nullable(),
+  location_text:  z.string().max(200, 'Landmark text exceeds 200 characters limit').optional().nullable(),
+  affected_count: z.number().int().min(1).max(5000).default(1),
+  image_url:      z.string().url().max(1000).optional().nullable().refine(url => {
+    if (!url) return true
+    const cleanUrl = url.split('?')[0].toLowerCase()
+    return cleanUrl.endsWith('.jpg') || cleanUrl.endsWith('.jpeg') || cleanUrl.endsWith('.png') || cleanUrl.endsWith('.webp') || url.includes('/report-images/')
+  }, { message: 'Image must be JPEG, PNG, or WebP format' }),
 })
 
 // ── AI response validation schema ─────────────────────────────────────────────
@@ -109,6 +146,28 @@ serve(async (req) => {
   }
 
   try {
+    // ── 0. Abuse & Rate Limiting Check ──────────────────────────────────────
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+                     req.headers.get('cf-connecting-ip') ||
+                     'anonymous-client'
+    const rateCheck = checkRateLimit(clientIp)
+    if (!rateCheck.allowed) {
+      return new Response(
+        JSON.stringify({
+          error: 'Rate limit exceeded. Too many complaints submitted from this address.',
+          retry_after_seconds: rateCheck.retryAfterSeconds,
+        }),
+        {
+          status: 429,
+          headers: {
+            ...CORS_HEADERS,
+            'Content-Type': 'application/json',
+            'Retry-After': String(rateCheck.retryAfterSeconds),
+          },
+        }
+      )
+    }
+
     // ── 1. Parse and validate input ─────────────────────────────────────────
     const body = await req.json()
     const parseResult = InputSchema.safeParse(body)

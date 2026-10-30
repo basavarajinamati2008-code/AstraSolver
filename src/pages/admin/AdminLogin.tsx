@@ -100,11 +100,14 @@ export default function AdminLogin() {
               </Button>
             </form>
 
-            {/* Demo credentials hint */}
-            <div className="mt-4 p-3 bg-muted rounded-md">
-              <p className="text-xs text-muted-foreground font-medium mb-1">Demo credentials:</p>
-              <p className="text-xs text-muted-foreground">Email: <code>admin@civicpulse.demo</code></p>
-              <p className="text-xs text-muted-foreground">Password: <code>CivicPulse2024!</code></p>
+            {/* Security notice */}
+            <div className="mt-4 p-3 bg-muted rounded-md text-center">
+              <p className="text-xs text-muted-foreground font-medium">
+                Authorized Municipal Personnel Only
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Accounts are provisioned by your municipal IT administrator via Supabase Auth.
+              </p>
             </div>
           </CardContent>
         </Card>

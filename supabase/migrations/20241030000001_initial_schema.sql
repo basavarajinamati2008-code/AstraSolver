@@ -215,13 +215,44 @@ $$;
 GRANT EXECUTE ON FUNCTION track_report(text) TO anon;
 GRANT EXECUTE ON FUNCTION public_stats()     TO anon;
 
--- ── Storage bucket policies ───────────────────────────────────────────────────
--- These are set via Supabase dashboard or CLI, not SQL.
--- See README.md for instructions.
--- Bucket: report-images
---   Public read: ON
---   Anonymous upload: allowed, max file size 5242880 bytes (5 MB),
---   allowed MIME types: image/jpeg, image/png, image/webp
+-- ── Storage Bucket & Security Policies ────────────────────────────────────────
+-- Provision report-images bucket with 5MB max file size and image type constraints
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'report-images',
+  'report-images',
+  true,
+  5242880,
+  ARRAY['image/jpeg', 'image/png', 'image/webp']
+)
+ON CONFLICT (id) DO UPDATE SET
+  public = true,
+  file_size_limit = 5242880,
+  allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp'];
+
+-- Allow public read on report-images bucket
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' AND policyname = 'Public Access for report-images'
+  ) THEN
+    CREATE POLICY "Public Access for report-images"
+      ON storage.objects FOR SELECT
+      USING (bucket_id = 'report-images');
+  END IF;
+END $$;
+
+-- Allow anonymous and authenticated image upload to report-images bucket
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' AND policyname = 'Allow upload to report-images'
+  ) THEN
+    CREATE POLICY "Allow upload to report-images"
+      ON storage.objects FOR INSERT
+      WITH CHECK (bucket_id = 'report-images');
+  END IF;
+END $$;
 
 -- ── Done ─────────────────────────────────────────────────────────────────────
 -- Verify with:

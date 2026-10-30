@@ -82,13 +82,11 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOi...
 # Server-Side Secrets (Configured ONLY in Supabase Secrets / CLI)
 # DO NOT put these in frontend code or git!
 GEMINI_API_KEY=AIzaSy...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
 ```
 
-To set secrets for Supabase Edge Functions:
+To set secrets for Supabase Edge Functions (Edge Functions automatically receive `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in their execution runtime):
 ```bash
 supabase secrets set GEMINI_API_KEY="your-gemini-api-key"
-supabase secrets set SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key"
 ```
 
 ---
@@ -172,7 +170,7 @@ supabase functions deploy civic-brief
 | **6** | View Success Screen | Code generated (e.g. `CIV-00001`), AI tags, priority score. |
 | **7** | Submit 2nd complaint nearby | Rephrased text at same location. |
 | **8** | View Duplicate Alert | System detects duplicate $\ge 70\%$, links to primary, preserves both rows. |
-| **9** | Open `/admin/login` | Sign in with `admin@civicpulse.demo` / `CivicPulse2024!`. |
+| **9** | Open `/admin/login` | Sign in with your provisioned municipal officer credentials. |
 | **10** | Overview Dashboard | Priority donut, category bars, 14-day line chart update. |
 | **11** | Hotspot Map / List | DBSCAN groups 3+ incidents $\le 250\text{m}$ (*"Possible infrastructure issue"*). |
 | **12** | AI Civic Action Brief | Click **Regenerate** to synthesize actionable officer briefing. |

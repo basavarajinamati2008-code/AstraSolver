@@ -1,9 +1,11 @@
 // civic-brief Edge Function
+// Protected endpoint: requires authenticated municipal staff (verified JWT)
 // Computes stats from DB, sends compact JSON to Gemini, caches result in briefs table
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { dbscan } from '../_shared/dbscan.ts'
+import { verifyAdminAuth } from '../_shared/auth.ts'
 
 const GEMINI_MODEL    = 'gemini-2.0-flash'
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
@@ -18,6 +20,18 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS_HEADERS })
 
   try {
+    // ── Verify Authenticated Municipal Admin ──────────────────────────────
+    const auth = await verifyAdminAuth(req)
+    if (!auth.authenticated) {
+      return new Response(
+        JSON.stringify({
+          error: 'Unauthorized: Municipal staff authentication required to generate civic briefs.',
+          details: auth.error,
+        }),
+        { status: 401, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
+      )
+    }
+
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
