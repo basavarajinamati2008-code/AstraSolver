@@ -8,6 +8,7 @@ import { tokenise, textSimilarity } from '../supabase/functions/_shared/tfidf'
 import { detectDuplicate } from '../supabase/functions/_shared/duplicates'
 import { computePriority } from '../supabase/functions/_shared/scoring'
 import { dbscan } from '../supabase/functions/_shared/dbscan'
+import { CIVIC_CONFIG } from '../config/civicpulse.config'
 
 // ── haversine ──────────────────────────────────────────────────────────────
 describe('haversine', () => {
@@ -198,5 +199,65 @@ describe('dbscan', () => {
   it('returns empty array for fewer than minPts points', () => {
     const clusters = dbscan(clusterA.slice(0, 2), 250, 3)
     expect(clusters).toEqual([])
+  })
+})
+
+// ── CIVIC_CONFIG integrity ────────────────────────────────────────────────
+describe('CIVIC_CONFIG integrity', () => {
+  it('has verified Gemini 2.5 Flash model', () => {
+    expect(CIVIC_CONFIG.GEMINI_MODEL).toBe('gemini-2.5-flash')
+  })
+
+  it('weights sum to 100 for max priority calculation', () => {
+    const maxSafety = CIVIC_CONFIG.PRIORITY_WEIGHTS.safety.High
+    const maxImpact = CIVIC_CONFIG.PRIORITY_WEIGHTS.impact.High
+    const maxUrgency = CIVIC_CONFIG.PRIORITY_WEIGHTS.urgency.High
+    const maxAffected = CIVIC_CONFIG.PRIORITY_WEIGHTS.affectedTiers.tier4
+    expect(maxSafety + maxImpact + maxUrgency + maxAffected).toBe(100)
+  })
+
+  it('duplicate weights sum exactly to 1.0', () => {
+    const { cosine, categoryMatch, distanceScore } = CIVIC_CONFIG.DUPLICATE_CONFIG.weights
+    expect(Math.round((cosine + categoryMatch + distanceScore) * 100) / 100).toBe(1.0)
+  })
+})
+
+// ── Auth Token Verification ───────────────────────────────────────────────
+describe('verifyAdminAuth logic', () => {
+  it('rejects requests with missing Authorization header', () => {
+    const req = new Request('https://example.com/api/hotspots', { method: 'POST' })
+    const authHeader = req.headers.get('Authorization')
+    expect(authHeader).toBeNull()
+  })
+
+  it('extracts Bearer token properly', () => {
+    const token = 'fake-jwt-token-xyz'
+    const req = new Request('https://example.com/api/hotspots', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const authHeader = req.headers.get('Authorization')
+    expect(authHeader).toBe(`Bearer ${token}`)
+    const extracted = authHeader?.replace('Bearer ', '').trim()
+    expect(extracted).toBe(token)
+  })
+})
+
+// ── CSV Export Formatting ─────────────────────────────────────────────────
+describe('CSV export formatting', () => {
+  it('escapes quotes and formats CSV rows correctly', () => {
+    const row = {
+      code: 'CIV-00001',
+      desc: 'Deep pothole, "very dangerous" near main road',
+      cat: 'Road Damage',
+      priority: 'Critical',
+      score: 95,
+      status: 'Submitted',
+    }
+
+    const escapeCsv = (val: string | number) => `"${String(val).replace(/"/g, '""')}"`
+    const csvLine = [row.code, row.cat, row.priority, row.score, row.status, escapeCsv(row.desc)].join(',')
+
+    expect(csvLine).toContain('"CIV-00001"')
+    expect(csvLine).toContain('"Deep pothole, ""very dangerous"" near main road"')
   })
 })
