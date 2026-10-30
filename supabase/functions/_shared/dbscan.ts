@@ -1,8 +1,7 @@
-// DBSCAN clustering for hotspot detection
-// eps: maximum distance (metres) between points in a cluster
-// minPts: minimum points to form a cluster
+// DBSCAN clustering for hotspot detection powered by CIVIC_CONFIG
 
 import { haversine } from './haversine.ts'
+import { CIVIC_CONFIG } from './config.ts'
 
 export interface GeoPoint {
   id: string
@@ -119,7 +118,7 @@ export function dbscan(
       avg_priority:     avgPrio,
       label,
       // Deliberately vague — never claim a proven cause
-      wording: 'Possible infrastructure issue, inspection recommended',
+      wording: CIVIC_CONFIG.DBSCAN_CONFIG.advisoryWording,
     })
   }
 

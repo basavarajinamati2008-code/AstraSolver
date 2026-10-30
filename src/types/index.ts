@@ -1,41 +1,20 @@
 // Shared TypeScript types used across the entire app.
-// Keep in sync with the database schema in supabase/migrations/.
+// Central configuration imported from config/civicpulse.config.ts
 
-export type Priority = 'Low' | 'Medium' | 'High' | 'Critical'
-export type ReportStatus = 'Submitted' | 'Under Review' | 'Assigned' | 'In Progress' | 'Resolved'
+import { CIVIC_CONFIG } from '../../config/civicpulse.config'
+
+export type Priority = keyof typeof CIVIC_CONFIG.PRIORITY_LEVEL_THRESHOLDS
+export type ReportStatus = typeof CIVIC_CONFIG.STATUSES[number]
 export type RiskLevel = 'Low' | 'Medium' | 'High'
 export type AiStatus = 'pending' | 'success' | 'failed'
 
-export const CATEGORIES = [
-  'Road Damage',
-  'Waterlogging',
-  'Garbage',
-  'Streetlight',
-  'Water Supply',
-  'Drainage',
-  'Public Safety',
-  'Other',
-] as const
+export const CATEGORIES = CIVIC_CONFIG.CATEGORIES
 export type Category = typeof CATEGORIES[number]
 
-export const DEPARTMENTS = [
-  'Roads',
-  'Water Board',
-  'Sanitation',
-  'Electricity',
-  'Drainage',
-  'Police/Public Safety',
-  'Other',
-] as const
+export const DEPARTMENTS = CIVIC_CONFIG.DEPARTMENTS
 export type Department = typeof DEPARTMENTS[number]
 
-export const STATUSES: ReportStatus[] = [
-  'Submitted',
-  'Under Review',
-  'Assigned',
-  'In Progress',
-  'Resolved',
-]
+export const STATUSES = CIVIC_CONFIG.STATUSES
 
 // Priority breakdown stored as JSONB in DB
 export interface PriorityBreakdown {

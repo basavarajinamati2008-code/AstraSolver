@@ -1,12 +1,8 @@
-// Priority scoring logic
-// safety:   High→40, Medium→22, Low→8
-// impact:   High→25, Medium→14, Low→5
-// urgency:  High→20, Medium→11, Low→4
-// affected: 1→3, 2-3→7, 4-6→11, 7+→15
-// total clamped to 0–100
-// Level: 0-24 Low, 25-49 Medium, 50-74 High, 75-100 Critical
+// Priority scoring logic powered by CIVIC_CONFIG
 
-export type RiskLevel = 'Low' | 'Medium' | 'High'
+import { CIVIC_CONFIG, type PriorityLevel, type RiskDimension } from './config.ts'
+
+export type RiskLevel = RiskDimension
 
 export interface PriorityBreakdown {
   safety:   number
@@ -18,26 +14,23 @@ export interface PriorityBreakdown {
 
 export interface PriorityResult {
   priority_score:       number
-  priority_level:       'Low' | 'Medium' | 'High' | 'Critical'
+  priority_level:       PriorityLevel
   priority_breakdown:   PriorityBreakdown
   priority_explanation: string
 }
 
-const SAFETY_POINTS: Record<RiskLevel, number> = { High: 40, Medium: 22, Low: 8 }
-const IMPACT_POINTS: Record<RiskLevel, number> = { High: 25, Medium: 14, Low: 5 }
-const URGENCY_POINTS: Record<RiskLevel, number> = { High: 20, Medium: 11, Low: 4 }
-
 function affectedPoints(count: number): number {
-  if (count >= 7) return 15
-  if (count >= 4) return 11
-  if (count >= 2) return 7
+  for (const tier of CIVIC_CONFIG.PRIORITY_WEIGHTS.affectedTiers) {
+    if (count >= tier.minCount) return tier.points
+  }
   return 3
 }
 
-function levelFromScore(score: number): 'Low' | 'Medium' | 'High' | 'Critical' {
-  if (score >= 75) return 'Critical'
-  if (score >= 50) return 'High'
-  if (score >= 25) return 'Medium'
+function levelFromScore(score: number): PriorityLevel {
+  const t = CIVIC_CONFIG.PRIORITY_LEVEL_THRESHOLDS
+  if (score >= t.Critical) return 'Critical'
+  if (score >= t.High) return 'High'
+  if (score >= t.Medium) return 'Medium'
   return 'Low'
 }
 
@@ -47,12 +40,12 @@ export function computePriority(
   urgency:      RiskLevel,
   affectedCount: number
 ): PriorityResult {
-  const safety   = SAFETY_POINTS[safetyRisk]
-  const impact   = IMPACT_POINTS[publicImpact]
-  const urg      = URGENCY_POINTS[urgency]
-  const aff      = affectedPoints(affectedCount)
-  const total    = Math.min(100, safety + impact + urg + aff)
-  const level    = levelFromScore(total)
+  const safety = CIVIC_CONFIG.PRIORITY_WEIGHTS.safety[safetyRisk]
+  const impact = CIVIC_CONFIG.PRIORITY_WEIGHTS.impact[publicImpact]
+  const urg    = CIVIC_CONFIG.PRIORITY_WEIGHTS.urgency[urgency]
+  const aff    = affectedPoints(affectedCount)
+  const total  = Math.min(100, safety + impact + urg + aff)
+  const level  = levelFromScore(total)
 
   const breakdown: PriorityBreakdown = { safety, impact: impact, urgency: urg, affected: aff, total }
 

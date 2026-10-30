@@ -1,9 +1,8 @@
-// Duplicate detection logic
-// confidence = 0.45*cosine + 0.20*(category equal) + 0.35*max(0,1-dist/300m)
-// If best >= 0.70, mark as duplicate of the primary (follow chain)
+// Duplicate detection logic powered by CIVIC_CONFIG
 
 import { haversine } from './haversine.ts'
 import { textSimilarity } from './tfidf.ts'
+import { CIVIC_CONFIG } from './config.ts'
 
 export interface Candidate {
   id: string
@@ -55,13 +54,14 @@ export function detectDuplicate(
     if (c.id === newReport.id) continue  // exclude self
 
     const dist = haversine(newReport.latitude, newReport.longitude, c.latitude, c.longitude)
-    if (dist > 500) continue  // safety guard (pre-filter may miss edge cases)
+    if (dist > CIVIC_CONFIG.DUPLICATE_CONFIG.candidateRadiusMeters) continue
 
     const cosineSim = textSimilarity(newReport.description, c.description)
     const catMatch  = (c.category || '') === newReport.category ? 1 : 0
-    const distScore = Math.max(0, 1 - dist / 300)
+    const distScore = Math.max(0, 1 - dist / CIVIC_CONFIG.DUPLICATE_CONFIG.linearDecayDistanceMeters)
 
-    const confidence = 0.45 * cosineSim + 0.20 * catMatch + 0.35 * distScore
+    const { weights, threshold } = CIVIC_CONFIG.DUPLICATE_CONFIG
+    const confidence = weights.cosine * cosineSim + weights.categoryMatch * catMatch + weights.distanceScore * distScore
 
     if (confidence > bestScore) {
       bestScore    = confidence
@@ -72,7 +72,7 @@ export function detectDuplicate(
     }
   }
 
-  if (bestScore < 0.70 || !bestId) {
+  if (bestScore < CIVIC_CONFIG.DUPLICATE_CONFIG.threshold || !bestId) {
     return { duplicate_of: null, confidence: null, reason: null }
   }
 

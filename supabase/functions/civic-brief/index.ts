@@ -6,8 +6,9 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { dbscan } from '../_shared/dbscan.ts'
 import { verifyAdminAuth } from '../_shared/auth.ts'
+import { CIVIC_CONFIG } from '../_shared/config.ts'
 
-const GEMINI_MODEL    = 'gemini-2.0-flash'
+const GEMINI_MODEL    = CIVIC_CONFIG.GEMINI_MODEL
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
 
 const CORS_HEADERS = {

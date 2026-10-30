@@ -6,6 +6,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { dbscan } from '../_shared/dbscan.ts'
 import { verifyAdminAuth } from '../_shared/auth.ts'
+import { CIVIC_CONFIG } from '../_shared/config.ts'
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
@@ -59,8 +60,8 @@ serve(async (req) => {
       status:         r.status,
     }))
 
-    // Run DBSCAN: eps=250m, minPts=3
-    const clusters = dbscan(points, 250, 3)
+    // Run DBSCAN using unified configuration parameters
+    const clusters = dbscan(points, CIVIC_CONFIG.DBSCAN_CONFIG.epsMeters, CIVIC_CONFIG.DBSCAN_CONFIG.minPts)
 
     // Strip raw point IDs (don't expose internal row IDs to frontend)
     const response = clusters.map(({ points: _pts, ...rest }) => rest)

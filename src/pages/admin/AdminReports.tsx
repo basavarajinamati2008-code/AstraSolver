@@ -1,7 +1,7 @@
 // Admin Reports page — searchable, filterable, sortable table of all complaints
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Filter, ArrowUpDown, Loader2 } from 'lucide-react'
+import { Search, Filter, ArrowUpDown, Download } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -92,11 +92,64 @@ export default function AdminReports() {
     setDateFrom(''); setDateTo('')
   }
 
+  const exportToCSV = () => {
+    if (filtered.length === 0) return
+
+    const headers = [
+      'Complaint Code',
+      'Category',
+      'User Category',
+      'Description',
+      'Priority Level',
+      'Priority Score',
+      'Status',
+      'Department',
+      'Latitude',
+      'Longitude',
+      'Landmark',
+      'Affected Count',
+      'Created At',
+    ]
+
+    const rows = filtered.map(r => [
+      r.complaint_code,
+      `"${(r.category || r.user_category || '').replace(/"/g, '""')}"`,
+      `"${(r.user_category || '').replace(/"/g, '""')}"`,
+      `"${(r.description || '').replace(/"/g, '""')}"`,
+      r.priority_level || '',
+      r.priority_score ?? '',
+      r.status,
+      `"${(r.assigned_department || '').replace(/"/g, '""')}"`,
+      r.latitude,
+      r.longitude,
+      `"${(r.location_text || '').replace(/"/g, '""')}"`,
+      r.affected_count,
+      r.created_at,
+    ])
+
+    const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `civicpulse-reports-${new Date().toISOString().slice(0, 10)}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-navy">All Reports</h1>
-        <span className="text-sm text-muted-foreground">{filtered.length} of {reports.length}</span>
+        <div>
+          <h1 className="text-xl font-bold text-navy">All Reports</h1>
+          <span className="text-xs text-muted-foreground">{filtered.length} of {reports.length} records shown</span>
+        </div>
+        <Button variant="outline" size="sm" onClick={exportToCSV} disabled={filtered.length === 0}>
+          <Download className="h-4 w-4 mr-1.5" />
+          Export CSV
+        </Button>
       </div>
 
       {/* ── Filters ──────────────────────────────────────────────────────── */}

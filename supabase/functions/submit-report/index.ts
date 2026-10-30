@@ -8,9 +8,10 @@ import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
 import { detectDuplicate } from '../_shared/duplicates.ts'
 import { computePriority } from '../_shared/scoring.ts'
 import { haversine } from '../_shared/haversine.ts'
+import { CIVIC_CONFIG } from '../_shared/config.ts'
 
-// ── Gemini model constant — update here if the recommended model changes ───────
-const GEMINI_MODEL = 'gemini-2.0-flash'
+// ── Gemini endpoint using unified model config ──────────────────────────────
+const GEMINI_MODEL = CIVIC_CONFIG.GEMINI_MODEL
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
 
 // ── CORS headers ──────────────────────────────────────────────────────────────
@@ -20,22 +21,9 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-// ── Categories whitelist ──────────────────────────────────────────────────────
-const ALLOWED_CATEGORIES = [
-  'Road Damage',
-  'Waterlogging',
-  'Garbage',
-  'Streetlight',
-  'Water Supply',
-  'Drainage',
-  'Public Safety',
-  'Other',
-] as const
-
 // ── In-Memory Sliding Window Rate Limiter ────────────────────────────────────
 // Limits anonymous abuse: Max 10 submissions per 5-minute window per IP
-const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000
-const MAX_SUBMISSIONS_PER_WINDOW = 10
+const { windowMs: RATE_LIMIT_WINDOW_MS, maxSubmissionsPerWindow: MAX_SUBMISSIONS_PER_WINDOW } = CIVIC_CONFIG.RATE_LIMIT_CONFIG
 const ipSubmissions = new Map<string, number[]>()
 
 function checkRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
@@ -54,13 +42,14 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: num
 }
 
 // ── Input validation schema ───────────────────────────────────────────────────
+const limits = CIVIC_CONFIG.INPUT_LIMITS
 const InputSchema = z.object({
-  description:    z.string().min(10, 'Description must be at least 10 characters').max(2000, 'Description exceeds 2000 characters limit'),
-  user_category:  z.enum(ALLOWED_CATEGORIES, { errorMap: () => ({ message: 'Invalid category selected' }) }),
+  description:    z.string().min(limits.descriptionMinLength, `Description must be at least ${limits.descriptionMinLength} characters`).max(limits.descriptionMaxLength, `Description exceeds ${limits.descriptionMaxLength} characters limit`),
+  user_category:  z.enum(CIVIC_CONFIG.CATEGORIES, { errorMap: () => ({ message: 'Invalid category selected' }) }),
   latitude:       z.number().min(-90).max(90),
   longitude:      z.number().min(-180).max(180),
-  location_text:  z.string().max(200, 'Landmark text exceeds 200 characters limit').optional().nullable(),
-  affected_count: z.number().int().min(1).max(5000).default(1),
+  location_text:  z.string().max(limits.locationTextMaxLength, `Landmark text exceeds ${limits.locationTextMaxLength} characters limit`).optional().nullable(),
+  affected_count: z.number().int().min(limits.affectedCountMin).max(limits.affectedCountMax).default(1),
   image_url:      z.string().url().max(1000).optional().nullable().refine(url => {
     if (!url) return true
     const cleanUrl = url.split('?')[0].toLowerCase()
